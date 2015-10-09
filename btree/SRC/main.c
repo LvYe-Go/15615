@@ -36,13 +36,17 @@ extern void printKey(struct KeyRecord *p);
 extern void printOcc(struct KeyRecord *p);
 extern int get_leftbracket(char *key, char *result);
 extern int get_rightbracket(char *key, char *result);
+//extern int get_rightbracket(char *key, int k);
 
 int main(int argc, char **argv) {
     char word[MAXWORDSIZE];
+    char result[MAXWORDSIZE];
+    char temp[MAXWORDSIZE];
     char cmd[MAXWORDSIZE];   /* string to hold a command */
     char fname[MAXWORDSIZE]; /* name of input file */
     PAGENO i;
     int goOn;
+    //   int k;
 
     setparms(); /* reads the pagesize and the number of ptrs/postigs_record */
     dbopen();   /* opens or creates the three files (btree, postings, text) */
@@ -64,59 +68,70 @@ int main(int argc, char **argv) {
         scanf("%s", cmd);
         assert(strlen(cmd) < MAXWORDSIZE);
         switch (cmd[0]) {
-        case 'C':
-            printf("\n*** Scanning... \n");
-            scanTree(&printOcc);
-            break;
-        case 'i':
-            printf("\tgive input file name: ");
-            scanf("%s", fname);
-            assert(strlen(fname) < MAXWORDSIZE);
-            printf("\n*** Inserting %s\n", fname);
-            insert(fname);
-            break;
-        case 's':
-            printf("enter search-word: ");
-            scanf("%s", word);
-            assert(strlen(word) < MAXWORDSIZE);
-            printf("\n*** Searching for word %s \n", word);
-            search(word, FALSE);
-            break;
-        case 'S':
-            printf("enter search-word: ");
-            scanf("%s", word);
-            assert(strlen(word) < MAXWORDSIZE);
-            printf("\n*** Searching for word %s \n", word);
-            search(word, TRUE);
-            break;
-        case 'p':
-            printf("pagenumber=?\n");
-            scanf("%s", cmd);
-            assert(strlen(cmd) < MAXWORDSIZE);
-            i = (PAGENO) atoi(cmd);
-            printPage(i, fpbtree);
-            break;
-        case ']':
-            // implement me !
-            break;
-        case '[':
-            // implement me!
-            break;
-        case 'T':
-            printf("\n*** Printing tree in order .........\n");
-            PrintTreeInOrder(ROOT, 0);
-            break;
-        case '#':
-            printf("\n*** #of reads on B-tree: %d", countPageFetch);
-            countPageFetch = 0;
-            break;
-        case 'x':
-            printf("\n*** Exiting .........\n");
-            goOn = FALSE;
-            break;
-        default:
-            printf("\n*** Illegal command \"%s\"\n", cmd);
-            break;
+            case 'C':
+                printf("\n*** Scanning... \n");
+                scanTree(&printOcc);
+                break;
+            case 'i':
+                printf("\tgive input file name: ");
+                scanf("%s", fname);
+                assert(strlen(fname) < MAXWORDSIZE);
+                printf("\n*** Inserting %s\n", fname);
+                insert(fname);
+                break;
+            case 's':
+                printf("enter search-word: ");
+                scanf("%s", word);
+                assert(strlen(word) < MAXWORDSIZE);
+                printf("\n*** Searching for word %s \n", word);
+                search(word, FALSE);
+                break;
+            case 'S':
+                printf("enter search-word: ");
+                scanf("%s", word);
+                assert(strlen(word) < MAXWORDSIZE);
+                printf("\n*** Searching for word %s \n", word);
+                search(word, TRUE);
+                break;
+            case 'p':
+                printf("pagenumber=?\n");
+                scanf("%s", cmd);
+                assert(strlen(cmd) < MAXWORDSIZE);
+                i = (PAGENO) atoi(cmd);
+                printPage(i, fpbtree);
+                break;
+            case ']':
+                printf("word=?\n");
+                scanf("%s", word);
+                assert(strlen(word) < MAXWORDSIZE);
+                strcpy(temp, word);;
+                get_rightbracket(word, result);
+                printf("Right bracket of %s:\n%s\n", temp,result);
+                break; 
+            case '[':
+                printf("word=?\n");
+                scanf("%s", word);
+                assert(strlen(word) < MAXWORDSIZE);
+              //  strcpy(temp, word);;
+                get_leftbracket(word, result);
+                printf("Left bracket of %s:\n%s\n", word,result);
+                break; 
+                break;
+            case 'T':
+                printf("\n*** Printing tree in order .........\n");
+                PrintTreeInOrder(ROOT, 0);
+                break;
+            case '#':
+                printf("\n*** #of reads on B-tree: %d", countPageFetch);
+                countPageFetch = 0;
+                break;
+            case 'x':
+                printf("\n*** Exiting .........\n");
+                goOn = FALSE;
+                break;
+            default:
+                printf("\n*** Illegal command \"%s\"\n", cmd);
+                break;
         }
     }
 

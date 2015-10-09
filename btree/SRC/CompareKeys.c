@@ -14,7 +14,7 @@
 /* Key:  Possible New Key */
 /* Word: The Key Stored in the B-Tree */
 int CompareKeys(char *Key, char *Word) {
-
+    
     int m = max(strlen(Key), strlen(Word));
 
     int i = 0;
