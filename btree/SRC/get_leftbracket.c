@@ -51,14 +51,14 @@ int get_leftbracket(char *key, char *result) {
                                               PagePtr->NumKeys, Count);
     printf("InsertionPosition is %d\n", InsertionPosition);
 
-    if(InsertionPosition == 0){
+    if(InsertionPosition <= 1){
     	struct PageHdr *PrePagePtr = FetchPage(PrePageNo);
     	KeyListTraverser = PrePagePtr->KeyListPtr;
     	NUMKEYS NumKeys = PrePagePtr->NumKeys;
     
-        for(i = 0; i < NumKeys; i++){
+        for(i = 1; i <= NumKeys; i++){
         	 if(KeyListTraverser != NULL && isPrefix(key, KeyListTraverser->StoredKey) == 0){
-        	 	 strcpy(result, key);	
+        	 	 strcpy(result, KeyListTraverser->StoredKey);	
         	 }
      	     KeyListTraverser = KeyListTraverser->Next;
         }
@@ -87,7 +87,6 @@ PAGENO treesearch_twopage(PAGENO PageNo, char *key, PAGENO *PrePageNo) {
         /* keys, if any, will be stored in Page# 2
            THESE PIECE OF CODE SHOULD GO soon! **/
         result = treesearch_twopage(FIRSTLEAFPG, key, PrePageNo);
-
     } else if ((IsNonLeaf(PagePtr)) && (PagePtr->NumKeys > 0)) {
         PAGENO ChildPage = FindPageNumOfTwoChild(PagePtr, PagePtr->KeyListPtr, key,
                                               PagePtr->NumKeys, PrePageNo);
